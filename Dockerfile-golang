@@ -7,7 +7,6 @@ RUN go get github.com/jstemmer/go-junit-report
 
 ENV CONSUL_TEMPLATE_VERSION=0.16.0
 ENV CONSUL_TEMPLATE_SHA256SUM=064b0b492bb7ca3663811d297436a4bbf3226de706d2b76adade7021cd22e156
-ENV CONSUL_CONNECT=localhost:8500
 
 ADD https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip .
 
