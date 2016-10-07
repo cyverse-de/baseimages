@@ -2,7 +2,7 @@
 node('docker') {
     slackJobDescription = "job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
     try {
-        stage "Build" {
+        stage("Build") {
             checkout scm
 
             service = readProperties file: 'service.properties'
@@ -14,7 +14,7 @@ node('docker') {
 
         dockerPusher = "push-${env.BUILD_TAG}"
         try {
-            stage "Docker Push" {
+            stage("Docker Push") {
                 dockerPushRepoGolang = "${service.dockerUser}/golang-base:${env.BRANCH_NAME}"
                 sh "docker tag ${dockerRepoGolang} ${dockerPushRepoGolang}"
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
