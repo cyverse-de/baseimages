@@ -17,26 +17,30 @@ node('docker') {
 
         dockerPusher = "push-${env.BUILD_TAG}"
         try {
+            milestone 100
             stage("Docker Push") {
                 service = readProperties file: 'service.properties'
 
                 dockerPushRepoGolang = "${service.dockerUser}/golang-base:${env.BRANCH_NAME}"
                 dockerPushRepoOpenjdk = "${service.dockerUser}/openjdk-base:${env.BRANCH_NAME}"
                 dockerPushRepoClojure = "${service.dockerUser}/clojure-base:${env.BRANCH_NAME}"
-                sh "docker tag ${dockerRepoGolang} ${dockerPushRepoGolang}"
-                sh "docker tag ${dockerRepoOpenjdk} ${dockerPushRepoOpenjdk}"
-                sh "docker tag ${dockerRepoClojure} ${dockerPushRepoClojure}"
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
-                    sh """docker run -e DOCKER_USERNAME -e DOCKER_PASSWORD \\
-                                     -v /var/run/docker.sock:/var/run/docker.sock \\
-                                     --rm --name ${dockerPusher} \\
-                                     docker:\$(docker version --format '{{ .Server.Version }}') \\
-                                     sh -e -c \\
-                          'docker login -u \"\$DOCKER_USERNAME\" -p \"\$DOCKER_PASSWORD\" && \\
-                           docker push ${dockerPushRepoGolang} && \\
-                           docker push ${dockerPushRepoOpenjdk} && \\
-                           docker push ${dockerPushRepoClojure} && \\
-                           docker logout'"""
+                lock("docker-push-baseimages") {
+                  milestone 101
+                  sh "docker tag ${dockerRepoGolang} ${dockerPushRepoGolang}"
+                  sh "docker tag ${dockerRepoOpenjdk} ${dockerPushRepoOpenjdk}"
+                  sh "docker tag ${dockerRepoClojure} ${dockerPushRepoClojure}"
+                  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'jenkins-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME']]) {
+                      sh """docker run -e DOCKER_USERNAME -e DOCKER_PASSWORD \\
+                                       -v /var/run/docker.sock:/var/run/docker.sock \\
+                                       --rm --name ${dockerPusher} \\
+                                       docker:\$(docker version --format '{{ .Server.Version }}') \\
+                                       sh -e -c \\
+                            'docker login -u \"\$DOCKER_USERNAME\" -p \"\$DOCKER_PASSWORD\" && \\
+                             docker push ${dockerPushRepoGolang} && \\
+                             docker push ${dockerPushRepoOpenjdk} && \\
+                             docker push ${dockerPushRepoClojure} && \\
+                             docker logout'"""
+                  }
                 }
             }
         } finally {
