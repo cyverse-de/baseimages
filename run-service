@@ -19,10 +19,13 @@ my $real_config;
 if (defined $config and $config =~ m{^consul://(.*)$}) {
 	my $dir = '/etc/iplant/de';
 	make_path($dir);
-	die "'$dir/$CONF_FILENAME' already exists, bailing out" if -e "$dir/$CONF_FILENAME";
-	system ("consul-template", "-once", "-consul", $1, "-template", "$CONF_TEMPLATE:$dir/$CONF_FILENAME") == 0
-		or die "invoking consul-template failed: $?";
 	$real_config = "$dir/$CONF_FILENAME";
+	if (-e "$dir/$CONF_FILENAME") {
+		warn "'$dir/$CONF_FILENAME' already exists, not recreating";
+	} else {
+		system ("consul-template", "-once", "-consul", $1, "-template", "$CONF_TEMPLATE:$dir/$CONF_FILENAME") == 0
+			or die "invoking consul-template failed: $?";
+	}
 } else {
 	$real_config = $config;
 }
