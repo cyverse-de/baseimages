@@ -50,6 +50,8 @@ node('docker') {
             sh returnStatus: true, script: "docker rmi ${dockerRepoGolang}"
             sh returnStatus: true, script: "docker rmi ${dockerRepoOpenjdk}"
             sh returnStatus: true, script: "docker rmi ${dockerRepoClojure}"
+
+            sh returnStatus: true, script: "docker rmi \$(docker images -qf 'dangling=true')"
         }
     } catch (InterruptedException e) {
         currentBuild.result = "ABORTED"
