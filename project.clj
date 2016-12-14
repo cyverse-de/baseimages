@@ -3,7 +3,8 @@
   :url "https://github.com/cyverse-de/baseimages"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.6.3"]
-                 [clj-http "2.0.0"]]
+                 [clj-http "3.4.1"]
+                 [medley "0.8.4"]]
   :plugins [[jonase/eastwood "0.2.3"]
             [test2junit "1.2.2"]]
   :eastwood {:exclude-namespaces [:test-paths]
