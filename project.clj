@@ -2,6 +2,7 @@
   :description "This project.clj file is only here for the sake of installing some dependencies"
   :url "https://github.com/cyverse-de/baseimages"
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/tools.nrepl "0.2.12" :exclusions [org.clojure/clojure]]
                  [cheshire "5.6.3"]
                  [clj-http "3.4.1"]
                  [medley "0.8.4"]
