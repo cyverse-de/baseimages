@@ -43,7 +43,7 @@ timestamps {
                   dockerPushRepoGolang = "${service.dockerUser}/golang-base:${env.BRANCH_NAME}"
                   dockerPushRepoOpenjdk = "${service.dockerUser}/openjdk-base:${env.BRANCH_NAME}"
                   dockerPushRepoClojure = "${service.dockerUser}/clojure-base:${env.BRANCH_NAME}"
-                  lock(resources: ["docker-push-${dockerPushRepoGolang}", "docker-push-${dockerPushRepoOpenjdk}", "docker-push-${dockerPushRepoClojure}"]) {
+                  lock("docker-push-baseimages") {
                     milestone 101
                     sh "docker tag ${dockerRepoGolang} ${dockerPushRepoGolang}"
                     sh "docker tag ${dockerRepoOpenjdk} ${dockerPushRepoOpenjdk}"
