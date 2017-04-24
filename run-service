@@ -32,7 +32,7 @@ if (defined $config and $config =~ m{^consul://(.*)$}) {
 
 unless ($dry_run) {
 	my @exec = @ARGV;
-	unshift(@exec, $PROGRAM);
+	unshift(@exec, "/sbin/tini", "--", $PROGRAM);
 	push(@exec, "--config", $real_config) unless ($exclude_config_arg or !defined $real_config);
 	exec @exec;
 }

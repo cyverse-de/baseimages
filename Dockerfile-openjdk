@@ -1,7 +1,6 @@
 FROM openjdk:alpine
 
-RUN apk add --update perl \
-    && rm -rf /var/cache/apk
+RUN apk add --no-cache git perl tini
 
 ENV CONSUL_TEMPLATE_VERSION=0.16.0
 ENV CONSUL_TEMPLATE_SHA256SUM=064b0b492bb7ca3663811d297436a4bbf3226de706d2b76adade7021cd22e156
