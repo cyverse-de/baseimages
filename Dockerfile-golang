@@ -1,7 +1,6 @@
 FROM golang:1.7-alpine
 
-RUN apk add --update git perl \
-    && rm -rf /var/cache/apk
+RUN apk add --no-cache git perl tini
 
 RUN go get github.com/jstemmer/go-junit-report
 
